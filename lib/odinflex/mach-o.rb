@@ -444,15 +444,17 @@ class MachO
     def section?; true; end
 
     def as_dwarf
+      raise NotImplementedError, "load WORF" unless defined?(::WORF)
+
       case sectname
       when "__debug_abbrev"
-        DWARF::DebugAbbrev.new io, self, start_pos
+        WORF::DebugAbbrev.new io, self, start_pos
       when "__debug_info"
-        DWARF::DebugInfo.new io, self, start_pos
+        WORF::DebugInfo.new io, self, start_pos
       when "__debug_str"
-        DWARF::DebugStrings.new io, self, start_pos
+        WORF::DebugStrings.new io, self, start_pos
       when "__debug_line"
-        DWARF::DebugLine.new io, self, start_pos
+        WORF::DebugLine.new io, self, start_pos
       else
         raise NotImplementedError
       end
