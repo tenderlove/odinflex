@@ -1,25 +1,20 @@
 require "helper"
+require "worf"
 
-module TenderTools
+module OdinFlex
   class MachODWARFIntegrationTest < Test
     def test_find_symbol_and_make_struct
-      addr = nil
       archive = nil
 
       File.open(RbConfig.ruby) do |f|
         my_macho = MachO.new f
         my_macho.each do |section|
           if section.symtab?
-            addr = section.nlist.find { |symbol|
-              symbol.name == "_ruby_api_version" && symbol.value > 0
-            }.value + Hacks.slide
-
             archive = section.nlist.find_all(&:archive?).map(&:archive).uniq.first
           end
         end
       end
 
-      assert addr
       assert archive
 
       found_object = nil

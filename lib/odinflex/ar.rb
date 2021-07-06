@@ -1,4 +1,4 @@
-module TenderTools
+module OdinFlex
   class AR
     include Enumerable
 

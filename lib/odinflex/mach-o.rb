@@ -1,4 +1,4 @@
-module TenderTools
+module OdinFlex
 class MachO
   HEADER_MAGIC = 0xfeedfacf
 
