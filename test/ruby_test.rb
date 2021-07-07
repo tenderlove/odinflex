@@ -1,7 +1,7 @@
 require "helper"
 
-module TenderTools
-  class RubyTest < TenderTools::Test
+module OdinFlex
+  class RubyTest < OdinFlex::Test
     def ruby_archive
       File.join RbConfig::CONFIG["prefix"], "lib", RbConfig::CONFIG["LIBRUBY"]
     end
@@ -191,7 +191,7 @@ module TenderTools
       addr = sym.value + Hacks.slide
       ptr = Fiddle::Function.new(addr, [], TYPE_VOIDP).call
       len = RubyVM::INSTRUCTION_NAMES.length
-      p ptr[0, len * Fiddle::SIZEOF_VOIDP].unpack("Q#{len}")
+      assert ptr[0, len * Fiddle::SIZEOF_VOIDP].unpack("Q#{len}")
     end
 
     def test_guess_slide
