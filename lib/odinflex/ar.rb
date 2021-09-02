@@ -42,9 +42,18 @@ module OdinFlex
         raise "wrong ending #{ending}" unless ending.bytes == [0x60, 0x0A]
         pos = @fd.pos
 
-        # Assume BSD for now
-        fname_len = identifier[/\d+$/].to_i
-        filename = @fd.read(fname_len).unpack1('A*')
+        fname_len = 0
+
+        if identifier =~ /\d+$/ # BSD
+          fname_len = identifier[/\d+$/].to_i
+          filename = @fd.read(fname_len).unpack1('A*')
+        else
+          if identifier == "/" || identifier == "//"
+            filename = identifier
+          else
+            filename = identifier.sub(/[\/]$/, '')
+          end
+        end
         info = Info.new filename, timestamp, owner, group, mode, size.to_i - fname_len, @fd.pos
 
         yield info
