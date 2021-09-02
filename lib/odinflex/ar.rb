@@ -31,7 +31,7 @@ module OdinFlex
       @fd.seek @pos, IO::SEEK_SET
       header = @fd.read(AR_HEADER.length)
 
-      raise "Wrong Header" unless header == AR_HEADER
+      raise "Wrong Header #{header}" unless header == AR_HEADER
 
       loop do
         break if @fd.eof?
