@@ -1,9 +1,9 @@
 require "helper"
-require "worf"
 
 module OdinFlex
   class MachODWARFIntegrationTest < Test
-    def test_find_symbol_and_make_struct
+    def test_can_read_archive
+      skip unless File.exist?(ruby_archive)
       archive = nil
 
       File.open(RbConfig.ruby) do |f|
@@ -25,19 +25,7 @@ module OdinFlex
           next unless object_file.identifier.end_with?(".o")
           next unless object_file.identifier == "version.o"
 
-          f.seek object_file.pos, IO::SEEK_SET
-          macho = MachO.new f
-          debug_info = macho.find_section("__debug_info")&.as_dwarf || next
-          debug_strs = macho.find_section("__debug_str").as_dwarf
-          debug_abbrev = macho.find_section("__debug_abbrev").as_dwarf
-
-          debug_info.compile_units(debug_abbrev.tags).each do |unit|
-            unit.die.children.each do |die|
-              if die.name(debug_strs) == "ruby_api_version"
-                found_object = object_file
-              end
-            end
-          end
+          found_object = object_file
         end
       end
 

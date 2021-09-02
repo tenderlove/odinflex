@@ -31,15 +31,21 @@ module OdinFlex
       @fd.seek @pos, IO::SEEK_SET
       header = @fd.read(AR_HEADER.length)
 
-      raise "Wrong Header" unless header == AR_HEADER
+      raise "Wrong Header #{header}" unless header == AR_HEADER
 
       loop do
+        @fd.readbyte unless @fd.pos.even?
+
         break if @fd.eof?
 
+        header_bytes = @fd.read(HEADER_LENGTH)
         identifier, timestamp, owner, group, mode, size, ending =
-          @fd.read(HEADER_LENGTH).unpack('A16A12A6A6A8A10A2')
+          header_bytes.unpack('A16A12A6A6A8A10A2')
 
-        raise "wrong ending #{ending}" unless ending.bytes == [0x60, 0x0A]
+        unless ending.bytes == [0x60, 0x0A]
+          raise "wrong ending #{ending.bytes.map { |x| sprintf("%#02x", x) }}"
+        end
+
         pos = @fd.pos
 
         fname_len = 0
