@@ -20,6 +20,7 @@ module OdinFlex
 
     def test_read_archive_twice
       files = []
+      puts ruby_archive
       File.open(ruby_archive) do |f|
         ar = AR.new(f)
         ar.each { |file| files << file.identifier }
