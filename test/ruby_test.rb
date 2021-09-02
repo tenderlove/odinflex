@@ -6,6 +6,21 @@ module OdinFlex
       File.join RbConfig::CONFIG["prefix"], "lib", RbConfig::CONFIG["LIBRUBY"]
     end
 
+    def test_idk
+      File.open(ruby_archive) do |f|
+        macho = OdinFlex::MachO.new f
+        macho.each do |section|
+          next unless section.symtab?
+          section.nlist.each do |sym|
+            if sym.oso?
+              p sym.name
+              p File.exists?(sym.name)
+            end
+          end
+        end
+      end
+    end
+
     def test_ruby_archive
       assert File.file?(ruby_archive)
     end
