@@ -455,6 +455,8 @@ class MachO
         WORF::DebugStrings.new io, self, start_pos
       when "__debug_line"
         WORF::DebugLine.new io, self, start_pos
+      when "__debug_str_offs"
+        WORF::DebugStringOffsets.new io, self, start_pos
       else
         raise NotImplementedError
       end
